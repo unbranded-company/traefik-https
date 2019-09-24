@@ -1,0 +1,24 @@
+ersion: '2'
+
+services:
+  proxy:
+  image: traefik:v1.7.12-alpine
+  command: --configFile=/traefik.toml
+  restart: unless-stopped
+  networks:
+    - web
+  ports:
+    - "80:80"
+    - "443:443"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - .traefik.toml:/traefik.toml
+    - .acme.json:/acme.json
+  labels:
+    - "traefik.enable=true"
+    - "traefik.frontend.rule=Host:example.com"
+    - "traefik.port=8080"
+
+networks:
+  web:
+    external: true
